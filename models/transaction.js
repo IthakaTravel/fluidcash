@@ -30,7 +30,16 @@ var TransactionSchema = new Schema({
         required: true
     },
     status: {
-        type: Number,
+        type: String,
+        required: true,
+        enum: ['InProgress', 'Completed']
+    },
+    createdAt: {
+        type: Date,
+        required: true
+    },
+    completedAt: {
+        type: Data,
         required: true
     }
 });

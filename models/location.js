@@ -2,12 +2,21 @@ var mongoose = require('mongoose-q')();
 var Schema = mongoose.Schema;
 
 var LocationSchema = new Schema({
-    Accuracy: {
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    },
+    accuracy: {
         type: Number,
         required: true
     },
-    FriendlyName: {
+    friendlyName: {
         type: String,
+        required: true
+    },
+    coordinates: {
+        type: [Number],
+        index: '2d',
         required: true
     }
 });
