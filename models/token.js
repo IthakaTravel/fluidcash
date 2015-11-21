@@ -11,6 +11,10 @@ var TokenSchema = new Schema({
     user: {
         type: Schema.ObjectId,
         ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        required: true
     }
 });
 

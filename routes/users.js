@@ -84,7 +84,8 @@ router.post('/login', function(req, res, next) {
             var tokenModel = new TokenModel({
                 user: user._id,
                 tokenString: user._id,
-                expiresAt: expiryDate
+                expiresAt: expiryDate,
+                createdAt: new Date()
             });
 
             return tokenModel.saveQ();

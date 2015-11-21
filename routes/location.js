@@ -7,7 +7,11 @@ var sendError = require('./../error-formatter');
 
 router.post('/', function (req, res, next) {
 
-    if (!req.body.latitude || !req.body.longitude || !req.body.accuracy) {
+    console.log(req.body);
+
+    if ((!req.body.latitude && req.body.latitude !== 0) ||
+        (!req.body.longitude && req.body.longitude !== 0) ||
+        (!req.body.accuracy && req.body.accuracy!== 0)) {
         res.status(400);
         sendError(res, 'Latitude, Longitude and accuracy is required', null, 400);
         return;
