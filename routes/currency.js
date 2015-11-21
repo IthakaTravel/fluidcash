@@ -3,6 +3,8 @@ var router = express.Router();
 
 var CurrencyModel = require('./../models/currency');
 
+var sendError = require('./../error-formatter');
+
 var errorFormatter = require('./../error-formatter');
 
 router.get('/', function(req, res, next) {
@@ -16,6 +18,12 @@ router.get('/', function(req, res, next) {
 
 
 router.post('/', function (req, res, next) {
+
+    if (!req.body.name || !req.body.country) {
+        res.status(400);
+        sendError(res, 'Name and Country are required', null, 400);
+    }
+
     var currencyModel = new CurrencyModel({
         name: req.body.name,
         country: req.body.country

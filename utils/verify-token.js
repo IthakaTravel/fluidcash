@@ -1,5 +1,5 @@
 var TokenModel = require('./../models/token');
-var UserModel = require('./../models/User');
+var UserModel = require('./../models/user');
 var sendError = require('./../error-formatter');
 
 

@@ -3,11 +3,18 @@ var router = express.Router();
 
 var Q = require('q');
 var request = Q.denodeify(require('request'));
+var _ = require('lodash');
 
 var TokenModel = require('./../models/token');
-var UserModel = require('./../models/User');
+var UserModel = require('./../models/user');
 
 var sendError = require('./../error-formatter');
+
+router.get('/me', function (req, res, next) {
+    var user = req.user;
+    user.facebook = undefined;
+    return res.json(user);
+});
 
 router.post('/login', function(req, res, next) {
     if (!req.body.id || !req.body.token) {
@@ -20,6 +27,8 @@ router.post('/login', function(req, res, next) {
         id: req.body.id,
         token: req.body.token
     };
+
+    var userCreated = false;
 
     var facebookUri = 'https://graph.facebook.com/me?access_token=' + credentialsPassed.token + '&fields=id,name,email,first_name,last_name';
 
@@ -57,6 +66,8 @@ router.post('/login', function(req, res, next) {
                 newUser.firstName = fbResp.first_name;
                 newUser.lastName = fbResp.last_name;
 
+                userCreated = true;
+
                 return newUser.saveQ();
 
             }
@@ -75,10 +86,12 @@ router.post('/login', function(req, res, next) {
             });
 
             return tokenModel.saveQ();
+
         }).then(function packageData(token) {
 
             return res.json({
-                token: token.tokenString
+                token: token.tokenString,
+                new: userCreated
             });
 
         });
