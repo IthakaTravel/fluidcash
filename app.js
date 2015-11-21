@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose-q')();
 
 var sendError = require('./error-formatter');
+var verifyToken = require('./utils/verify-token');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,8 +22,33 @@ var app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function (req, res, next) {
+
+  if (req.path === '/users/login') {
+    return next();
+  }
+
+  if (!req.headers['x-api-token']) {
+    res.status(403);
+    sendError(res, 'Forbidden!! Token required!!', null, 403);
+    return;
+  }
+
+  var token = req.headers['x-api-token'];
+
+  verifyToken(req, res, token).then(function (verificationResponse) {
+    if (verificationResponse) {
+
+      req.user = verificationResponse.user;
+      req.token = verificationResponse.token;
+
+      return next();
+    }
+  });
+
+});
 
 app.use('/', routes);
 app.use('/users', users);
