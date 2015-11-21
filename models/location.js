@@ -11,8 +11,7 @@ var LocationSchema = new Schema({
         required: true
     },
     friendlyName: {
-        type: String,
-        required: true
+        type: String
     },
     coordinates: {
         type: [Number],
