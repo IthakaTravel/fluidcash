@@ -4,9 +4,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var mongoose = require('mongoose-q')();
+
+var sendError = require('./error-formatter');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var locations = require('./routes/location');
+var currencies = require('./routes/currency');
+var transactions = require('./routes/transaction');
 
 var app = express();
 
@@ -20,7 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/location', locations);
+app.use('/locations', locations);
+app.use('/currencies', currencies);
+app.use('/transactions', transactions);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -28,14 +36,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-var sendError = function(res, message, stack, code) {
-  res.json({
-    message: message,
-    stack: stack,
-    code: code
-  });
-};
 
 // error handlers
 
