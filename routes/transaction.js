@@ -7,4 +7,8 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/matches', function (req, res, next) {
+    
+});
+
 module.exports = router;

@@ -30,7 +30,7 @@ router.post('/login', function(req, res, next) {
 
     var userCreated = false;
 
-    var facebookUri = 'https://graph.facebook.com/me?access_token=' + credentialsPassed.token + '&fields=id,name,email,first_name,last_name';
+    var facebookUri = 'https://graph.facebook.com/me?access_token=' + credentialsPassed.token + '&fields=id,name,email,first_name,last_name,picture.type(large)';
 
     return request(facebookUri).then(function (resp) {
 
@@ -65,6 +65,8 @@ router.post('/login', function(req, res, next) {
                 newUser.email = fbResp.email;
                 newUser.firstName = fbResp.first_name;
                 newUser.lastName = fbResp.last_name;
+
+                newUser.picture = fbResp.picture.data.url;
 
                 userCreated = true;
 

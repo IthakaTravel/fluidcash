@@ -9,7 +9,19 @@ router.post('/', function (req, res, next) {
 
     if (!req.body.latitude || !req.body.longitude || !req.body.accuracy) {
         res.status(400);
-        sendError(res, 'Lattitude and Longitude is required', null, 400);
+        sendError(res, 'Latitude, Longitude and accuracy is required', null, 400);
+        return;
+    }
+
+    if (req.body.latitude > 180 || req.body.latitude < -180) {
+        res.status(400);
+        sendError(res, 'Latitude value should be in range [-180, 180]', null, 400);
+        return;
+    }
+
+    if (req.body.longitude > 180 || req.body.longitude < -180) {
+        res.status(400);
+        sendError(res, 'Longitude value should be in range [-180, 180]', null, 400);
         return;
     }
 
@@ -20,7 +32,8 @@ router.post('/', function (req, res, next) {
             req.body.longitude,
             req.body.latitude
         ],
-        accuracy: req.body.accuracy
+        accuracy: req.body.accuracy,
+        friendlyName: req.body.friendlyName
     }, {
         upsert: true,
         new: true
@@ -29,6 +42,9 @@ router.post('/', function (req, res, next) {
             accepted: true
         });
     }).catch(function (err) {
+
+        console.error(err.stack);
+
         res.status(500);
         sendError(res, 'Internal Server Error!', null, 500);
     });
