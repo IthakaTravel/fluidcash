@@ -7,8 +7,6 @@ var sendError = require('./../error-formatter');
 
 router.post('/', function (req, res, next) {
 
-    console.log(req.body);
-
     if ((!req.body.latitude && req.body.latitude !== 0) ||
         (!req.body.longitude && req.body.longitude !== 0) ||
         (!req.body.accuracy && req.body.accuracy!== 0)) {

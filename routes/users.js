@@ -10,6 +10,8 @@ var UserModel = require('./../models/user');
 
 var sendError = require('./../error-formatter');
 
+var generateToken = require('./../utils/generate-token');
+
 router.get('/me', function (req, res, next) {
     var user = req.user;
     user.facebook = undefined;
@@ -81,14 +83,16 @@ router.post('/login', function(req, res, next) {
             var expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 1);
 
-            var tokenModel = new TokenModel({
-                user: user._id,
-                tokenString: user._id,
-                expiresAt: expiryDate,
-                createdAt: new Date()
-            });
+            return generateToken(256).then(function saveToken(token) {
+                var tokenModel = new TokenModel({
+                    user: user._id,
+                    tokenString: token,
+                    expiresAt: expiryDate,
+                    createdAt: new Date()
+                });
 
-            return tokenModel.saveQ();
+                return tokenModel.saveQ();
+            });
 
         }).then(function packageData(token) {
 
